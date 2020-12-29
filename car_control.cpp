@@ -1,11 +1,6 @@
 #include <AFMotor.h>
 
 void releaseMotors(AF_DCMotor &m1, AF_DCMotor &m2, AF_DCMotor &m3, AF_DCMotor &m4);
-void driveForward(AF_DCMotor &m1, AF_DCMotor &m2, AF_DCMotor &m3, AF_DCMotor &m4);
-void driveBackward(AF_DCMotor &m1, AF_DCMotor &m2, AF_DCMotor &m3, AF_DCMotor &m4);
-void turnRight(AF_DCMotor &m1, AF_DCMotor &m2, AF_DCMotor &m3, AF_DCMotor &m4);
-void turnLeft(AF_DCMotor &m1, AF_DCMotor &m2, AF_DCMotor &m3, AF_DCMotor &m4);
-
 void updateSpeed(AF_DCMotor &m1, AF_DCMotor &m2, AF_DCMotor &m3, AF_DCMotor &m4, double leftPower, double RightPower);
 
 AF_DCMotor motor1(1);
