@@ -1,91 +1,62 @@
-// Adafruit Motor shield library
-// copyright Adafruit Industries LLC, 2009
-// this code is public domain, enjoy!
-
 #include <AFMotor.h>
-#include <Servo.h> 
 
-// DC motor on M1 and M2
+void releaseMotors(AF_DCMotor &m1, AF_DCMotor &m2, AF_DCMotor &m3, AF_DCMotor &m4);
+void driveForward(AF_DCMotor &m1, AF_DCMotor &m2, AF_DCMotor &m3, AF_DCMotor &m4);
+void driveBackward(AF_DCMotor &m1, AF_DCMotor &m2, AF_DCMotor &m3, AF_DCMotor &m4);
+void turnRight(AF_DCMotor &m1, AF_DCMotor &m2, AF_DCMotor &m3, AF_DCMotor &m4);
+void turnLeft(AF_DCMotor &m1, AF_DCMotor &m2, AF_DCMotor &m3, AF_DCMotor &m4);
 
-class Car {
-  public:
-  void driveAhead();
-  double leftSpeed;
-  double rightSpeed;
+void updateSpeed(AF_DCMotor &m1, AF_DCMotor &m2, AF_DCMotor &m3, AF_DCMotor &m4, double leftPower, double RightPower);
 
-  void setLeftSpeed(double leftSpeedIn){
-    motor3.setSpeed(leftSpeedIn);
-    motor4.setSpeed(leftSpeedIn);
-  }
+AF_DCMotor motor1(1);
+AF_DCMotor motor2(2);
+AF_DCMotor motor3(3);
+AF_DCMotor motor4(4);
 
-  void setRightSpeed(double rightSpeedIn) {
-    motor1.setSpeed(rightSpeedIn);
-    motor2.setSpeed(rightSpeedIn);
-  }
+void setup() {
+  Serial.begin(9600);           // set up Serial library at 9600 bps
+  //Serial.println("Motor test!");
 
-  Car(){
-    AF_DCMotor motor1(1, 0);
-    AF_DCMotor motor2(2, 0);
-    AF_DCMotor motor3(3, 0);
-    AF_DCMotor motor4(4, 0);
-  }
-  void move(bool isForward, double speed){
-    speed *= isForward;
-    this->release();
-    motor1.setSpeed(speed);
-    motor2.setSpeed(speed);
-    motor3.setSpeed(speed);
-    motor4.setSpeed(speed);
-  }
-
-  void turn(double location){
-    motor1.set
-  }
-
-  void release(){
-    motor1.run(RELEASE);
-    motor2.run(RELEASE);
-    motor3.run(RELEASE);
-    
-  }
-
-  
-
-  private:
-  AF_DCMotor motor1;
-  AF_DCMotor motor2;
-  AF_DCMotor motor3;
-  AF_DCMotor motor4;
-  
-}
-
-
-void setup() {   
-  // turn on motor #2
+  // turn on motor
   motor1.setSpeed(200);
-  motor1.run(RELEASE);
-
   motor2.setSpeed(200);
-  motor2.run(RELEASE);
-
   motor3.setSpeed(200);
-  motor3.run(RELEASE);
-
   motor4.setSpeed(200);
+  motor1.run(RELEASE);
+  motor2.run(RELEASE);
+  motor3.run(RELEASE);
   motor4.run(RELEASE);
-
-  delay(10000);
 }
 
 void loop() {
-  motor1.run(FORWARD);
-  motor2.run(FORWARD);
-  motor3.run(FORWARD);
-  motor4.run(FORWARD);
-  delay(3000);
-  motor1.run(RELEASE);
-  motor2.run(RELEASE);
-  motor3.run(RELEASE);
-  motor4.run(RELEASE);
-  delay(3000);
+  if (Serial.available()){
+    // update the speed based on the data received from the master transmitter  
+  }
+}
+
+void updateSpeed(AF_DCMotor &m1, AF_DCMotor &m2, AF_DCMotor &m3, AF_DCMotor &m4, double leftPower, double RightPower) {
+  releaseMotors(m1, m2, m3, m4);
+  double leftPowerMapped = map(leftPower, -127, 128, 0, 255);
+  double rightPowerMapped = map(rightPower, -127, 128, 0, 255);
+  if (leftPower<0){
+    m1.run(BACKWARD);
+    m2.run(BACKWARD);
+  }
+  else {
+    m1.run(FORWARD);
+    m2.run(FORWARD);
+  }
+  if (rightPower < 0) {
+    m3.run(BACKWARD);
+    m4.run(BACKWARD);
+  }
+  else {
+    m3.run(FORWARD);
+    m4.run(FORWARD);
+  }
+
+  m1.setSpeed(leftPowerMapped);
+  m2.setSpeed(leftPowerMapped);
+  m3.setSpeed(rightPowerMapped);
+  m4.setSpeed(rightPowerMapped);
 }
